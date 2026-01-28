@@ -1,0 +1,51 @@
+---
+/**
+ * Infinite Logo Carousel
+ * Smooth scrolling carousel for tech partners
+ */
+import TechLogo from './TechLogo.astro';
+
+interface Props {
+  logos: readonly { name: string; icon: string }[];
+  speed?: number;
+}
+
+const { logos, speed = 30 } = Astro.props;
+// Duplicate logos for infinite scroll effect
+const duplicatedLogos = [...logos, ...logos, ...logos];
+---
+
+<div class="logo-carousel-container relative overflow-hidden py-8">
+  <!-- Fade edges -->
+  <div class="absolute left-0 top-0 bottom-0 w-32 bg-gradient-to-r from-obsidian to-transparent z-10 pointer-events-none"></div>
+  <div class="absolute right-0 top-0 bottom-0 w-32 bg-gradient-to-l from-obsidian to-transparent z-10 pointer-events-none"></div>
+  
+  <!-- Scrolling track -->
+  <div class="logo-carousel-track flex items-center gap-16" style={`--speed: ${speed}s`}>
+    {duplicatedLogos.map((logo) => (
+      <div class="flex-shrink-0 w-16 h-16 opacity-50 hover:opacity-100 transition-opacity duration-300">
+        <TechLogo name={logo.icon} />
+      </div>
+    ))}
+  </div>
+</div>
+
+<style>
+  .logo-carousel-track {
+    animation: scroll var(--speed) linear infinite;
+    width: max-content;
+  }
+  
+  .logo-carousel-track:hover {
+    animation-play-state: paused;
+  }
+  
+  @keyframes scroll {
+    from {
+      transform: translateX(0);
+    }
+    to {
+      transform: translateX(calc(-100% / 3));
+    }
+  }
+</style>

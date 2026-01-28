@@ -1,0 +1,108 @@
+---
+import { SITE_CONFIG } from '@config/site';
+import Navbar from '@components/Navbar.astro';
+import Animations from '@components/ui/Animations.astro';
+
+interface Props {
+  title?: string;
+  description?: string;
+}
+
+const { 
+  title = SITE_CONFIG.seo.title, 
+  description = SITE_CONFIG.seo.description 
+} = Astro.props;
+---
+
+<!doctype html>
+<html lang="es">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="description" content={description} />
+    <meta name="keywords" content={SITE_CONFIG.seo.keywords.join(', ')} />
+    
+    <!-- Favicon -->
+    <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+    
+    <!-- Fonts: Inter from Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet" />
+    
+    <!-- Open Graph -->
+    <meta property="og:title" content={title} />
+    <meta property="og:description" content={description} />
+    <meta property="og:type" content="website" />
+    
+    <title>{title}</title>
+  </head>
+  <body class="bg-obsidian text-ivory font-sans antialiased overflow-x-hidden">
+    
+    <!-- Premium Animations & Effects -->
+    <Animations />
+    
+    <!-- ============================================ -->
+    <!-- ANIMATED AMBIENT BACKGROUND -->
+    <!-- ============================================ -->
+    <div class="fixed inset-0 -z-10 overflow-hidden pointer-events-none" aria-hidden="true">
+      <!-- Top-left blur - Cobalt Blue - Floating -->
+      <div class="absolute -top-40 -left-40 w-[600px] h-[600px] bg-sapphire/20 rounded-full blur-[120px] float"></div>
+      
+      <!-- Bottom-right blur - Deep Violet - Floating delayed -->
+      <div class="absolute -bottom-40 -right-40 w-[700px] h-[700px] bg-violet-900/25 rounded-full blur-[150px] float-delayed"></div>
+      
+      <!-- Center accent - Static -->
+      <div class="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[1000px] h-[500px] bg-sapphire-dark/8 rounded-full blur-[200px]"></div>
+      
+      <!-- Grid lines overlay -->
+      <div class="absolute inset-0 bg-[linear-gradient(rgba(255,255,255,0.02)_1px,transparent_1px),linear-gradient(90deg,rgba(255,255,255,0.02)_1px,transparent_1px)] bg-[size:80px_80px]"></div>
+      
+      <!-- Noise texture overlay -->
+      <div class="absolute inset-0 opacity-[0.015]" style="background-image: url('data:image/svg+xml,%3Csvg viewBox=&quot;0 0 256 256&quot; xmlns=&quot;http://www.w3.org/2000/svg&quot;%3E%3Cfilter id=&quot;noise&quot;%3E%3CfeTurbulence type=&quot;fractalNoise&quot; baseFrequency=&quot;0.9&quot; numOctaves=&quot;4&quot; stitchTiles=&quot;stitch&quot;/%3E%3C/filter%3E%3Crect width=&quot;100%25&quot; height=&quot;100%25&quot; filter=&quot;url(%23noise)&quot;/%3E%3C/svg%3E');"></div>
+    </div>
+    
+    <!-- Navbar -->
+    <Navbar />
+    
+    <!-- Main Content -->
+    <main>
+      <slot />
+    </main>
+  </body>
+</html>
+
+<style is:global>
+  @tailwind base;
+  @tailwind components;
+  @tailwind utilities;
+
+  /* Smooth scrolling */
+  html {
+    scroll-behavior: smooth;
+  }
+
+  /* Selection color */
+  ::selection {
+    background-color: rgba(30, 64, 175, 0.4);
+    color: #F4F4F5;
+  }
+
+  /* Custom scrollbar - subtle */
+  ::-webkit-scrollbar {
+    width: 8px;
+  }
+
+  ::-webkit-scrollbar-track {
+    background: #0B0C10;
+  }
+
+  ::-webkit-scrollbar-thumb {
+    background: rgba(255, 255, 255, 0.1);
+    border-radius: 4px;
+  }
+
+  ::-webkit-scrollbar-thumb:hover {
+    background: rgba(255, 255, 255, 0.2);
+  }
+</style>

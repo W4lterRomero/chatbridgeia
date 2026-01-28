@@ -1,0 +1,411 @@
+---
+/**
+ * Premium Animations & Effects
+ * Global styles for modern web interactions
+ */
+---
+
+<style is:global>
+  /* ============================================ */
+  /* ANIMATED GRADIENT TEXT */
+  /* ============================================ */
+  .gradient-text {
+    background: linear-gradient(
+      135deg,
+      #3B82F6 0%,
+      #8B5CF6 25%,
+      #EC4899 50%,
+      #8B5CF6 75%,
+      #3B82F6 100%
+    );
+    background-size: 400% 400%;
+    -webkit-background-clip: text;
+    background-clip: text;
+    -webkit-text-fill-color: transparent;
+    animation: gradient-shift 8s ease infinite;
+  }
+
+  @keyframes gradient-shift {
+    0%, 100% { background-position: 0% 50%; }
+    50% { background-position: 100% 50%; }
+  }
+
+  /* ============================================ */
+  /* REVEAL ON SCROLL ANIMATIONS */
+  /* ============================================ */
+  .reveal {
+    opacity: 0;
+    transform: translateY(40px);
+    transition: all 0.8s cubic-bezier(0.16, 1, 0.3, 1);
+  }
+
+  .reveal.visible {
+    opacity: 1;
+    transform: translateY(0);
+  }
+
+  .reveal-left {
+    opacity: 0;
+    transform: translateX(-60px);
+    transition: all 0.8s cubic-bezier(0.16, 1, 0.3, 1);
+  }
+
+  .reveal-left.visible {
+    opacity: 1;
+    transform: translateX(0);
+  }
+
+  .reveal-right {
+    opacity: 0;
+    transform: translateX(60px);
+    transition: all 0.8s cubic-bezier(0.16, 1, 0.3, 1);
+  }
+
+  .reveal-right.visible {
+    opacity: 1;
+    transform: translateX(0);
+  }
+
+  .reveal-scale {
+    opacity: 0;
+    transform: scale(0.9);
+    transition: all 0.8s cubic-bezier(0.16, 1, 0.3, 1);
+  }
+
+  .reveal-scale.visible {
+    opacity: 1;
+    transform: scale(1);
+  }
+
+  /* Staggered delays */
+  .delay-1 { transition-delay: 0.1s; }
+  .delay-2 { transition-delay: 0.2s; }
+  .delay-3 { transition-delay: 0.3s; }
+  .delay-4 { transition-delay: 0.4s; }
+  .delay-5 { transition-delay: 0.5s; }
+
+  /* ============================================ */
+  /* GLOW EFFECTS */
+  /* ============================================ */
+  .glow-sapphire {
+    box-shadow: 
+      0 0 20px rgba(59, 130, 246, 0.3),
+      0 0 40px rgba(59, 130, 246, 0.2),
+      0 0 60px rgba(59, 130, 246, 0.1);
+  }
+
+  .text-glow {
+    text-shadow: 
+      0 0 20px rgba(59, 130, 246, 0.5),
+      0 0 40px rgba(59, 130, 246, 0.3);
+  }
+
+  /* ============================================ */
+  /* FLOATING ANIMATION */
+  /* ============================================ */
+  .float {
+    animation: float 6s ease-in-out infinite;
+  }
+
+  .float-delayed {
+    animation: float 6s ease-in-out infinite;
+    animation-delay: -3s;
+  }
+
+  @keyframes float {
+    0%, 100% { transform: translateY(0px); }
+    50% { transform: translateY(-20px); }
+  }
+
+  /* ============================================ */
+  /* PULSE GLOW */
+  /* ============================================ */
+  .pulse-glow {
+    animation: pulse-glow 2s ease-in-out infinite;
+  }
+
+  @keyframes pulse-glow {
+    0%, 100% { 
+      box-shadow: 0 0 5px rgba(59, 130, 246, 0.4);
+    }
+    50% { 
+      box-shadow: 
+        0 0 20px rgba(59, 130, 246, 0.6),
+        0 0 40px rgba(59, 130, 246, 0.4);
+    }
+  }
+
+  /* ============================================ */
+  /* SHIMMER EFFECT */
+  /* ============================================ */
+  .shimmer {
+    position: relative;
+    overflow: hidden;
+  }
+
+  .shimmer::after {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(
+      90deg,
+      transparent 0%,
+      rgba(255, 255, 255, 0.1) 50%,
+      transparent 100%
+    );
+    transform: translateX(-100%);
+    animation: shimmer 3s infinite;
+  }
+
+  @keyframes shimmer {
+    0% { transform: translateX(-100%); }
+    100% { transform: translateX(100%); }
+  }
+
+  /* ============================================ */
+  /* CURSOR FOLLOWER */
+  /* ============================================ */
+  .cursor-follower {
+    width: 300px;
+    height: 300px;
+    position: fixed;
+    pointer-events: none;
+    z-index: 9999;
+    border-radius: 50%;
+    background: radial-gradient(
+      circle,
+      rgba(59, 130, 246, 0.15) 0%,
+      transparent 70%
+    );
+    transform: translate(-50%, -50%);
+    transition: opacity 0.3s ease;
+    mix-blend-mode: screen;
+  }
+
+  /* ============================================ */
+  /* MAGNETIC BUTTON EFFECT */
+  /* ============================================ */
+  .magnetic-btn {
+    transition: transform 0.3s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+  }
+
+  /* ============================================ */
+  /* LINE ANIMATION */
+  /* ============================================ */
+  .line-draw {
+    stroke-dasharray: 1000;
+    stroke-dashoffset: 1000;
+    animation: draw 2s ease forwards;
+  }
+
+  @keyframes draw {
+    to { stroke-dashoffset: 0; }
+  }
+
+  /* ============================================ */
+  /* BORDER GRADIENT ANIMATION */
+  /* ============================================ */
+  .border-gradient-animated {
+    position: relative;
+    border-radius: 1rem;
+    background: #0B0C10;
+  }
+
+  .border-gradient-animated::before {
+    content: '';
+    position: absolute;
+    inset: -2px;
+    border-radius: inherit;
+    background: linear-gradient(
+      45deg,
+      #3B82F6,
+      #8B5CF6,
+      #EC4899,
+      #8B5CF6,
+      #3B82F6
+    );
+    background-size: 400% 400%;
+    animation: gradient-shift 4s ease infinite;
+    z-index: -1;
+    opacity: 0;
+    transition: opacity 0.3s ease;
+  }
+
+  .border-gradient-animated:hover::before {
+    opacity: 1;
+  }
+
+  /* ============================================ */
+  /* TYPEWRITER EFFECT */
+  /* ============================================ */
+  .typewriter {
+    overflow: hidden;
+    border-right: 2px solid #3B82F6;
+    white-space: nowrap;
+    animation: 
+      typing 3.5s steps(40, end),
+      blink-caret 0.75s step-end infinite;
+  }
+
+  @keyframes typing {
+    from { width: 0; }
+    to { width: 100%; }
+  }
+
+  @keyframes blink-caret {
+    from, to { border-color: transparent; }
+    50% { border-color: #3B82F6; }
+  }
+
+  /* ============================================ */
+  /* COUNTER / NUMBER ANIMATION */
+  /* ============================================ */
+  .count-up {
+    font-variant-numeric: tabular-nums;
+  }
+
+  /* ============================================ */
+  /* PARALLAX LAYERS */
+  /* ============================================ */
+  .parallax-container {
+    perspective: 1000px;
+    overflow: hidden;
+  }
+
+  .parallax-slow {
+    transform: translateZ(-100px) scale(1.1);
+  }
+
+  .parallax-fast {
+    transform: translateZ(0);
+  }
+</style>
+
+<script>
+  // ============================================
+  // INTERSECTION OBSERVER - REVEAL ON SCROLL
+  // ============================================
+  const observerOptions = {
+    root: null,
+    rootMargin: '0px',
+    threshold: 0.1
+  };
+
+  const revealObserver = new IntersectionObserver((entries) => {
+    entries.forEach(entry => {
+      if (entry.isIntersecting) {
+        entry.target.classList.add('visible');
+      }
+    });
+  }, observerOptions);
+
+  // Observe all reveal elements
+  document.querySelectorAll('.reveal, .reveal-left, .reveal-right, .reveal-scale').forEach(el => {
+    revealObserver.observe(el);
+  });
+
+  // ============================================
+  // CURSOR FOLLOWER
+  // ============================================
+  const cursor = document.createElement('div');
+  cursor.className = 'cursor-follower';
+  document.body.appendChild(cursor);
+
+  let mouseX = 0, mouseY = 0;
+  let cursorX = 0, cursorY = 0;
+  const speed = 0.1;
+
+  document.addEventListener('mousemove', (e) => {
+    mouseX = e.clientX;
+    mouseY = e.clientY;
+  });
+
+  // Smooth cursor follow
+  function animateCursor() {
+    cursorX += (mouseX - cursorX) * speed;
+    cursorY += (mouseY - cursorY) * speed;
+    
+    cursor.style.left = cursorX + 'px';
+    cursor.style.top = cursorY + 'px';
+    
+    requestAnimationFrame(animateCursor);
+  }
+  animateCursor();
+
+  // Hide cursor when leaving viewport
+  document.addEventListener('mouseleave', () => {
+    cursor.style.opacity = '0';
+  });
+  document.addEventListener('mouseenter', () => {
+    cursor.style.opacity = '1';
+  });
+
+  // ============================================
+  // MAGNETIC BUTTON EFFECT
+  // ============================================
+  document.querySelectorAll('.magnetic-btn').forEach(btn => {
+    btn.addEventListener('mousemove', (e: Event) => {
+      const mouseEvent = e as MouseEvent;
+      const rect = (btn as HTMLElement).getBoundingClientRect();
+      const x = mouseEvent.clientX - rect.left - rect.width / 2;
+      const y = mouseEvent.clientY - rect.top - rect.height / 2;
+      
+      (btn as HTMLElement).style.transform = `translate(${x * 0.3}px, ${y * 0.3}px)`;
+    });
+    
+    btn.addEventListener('mouseleave', () => {
+      (btn as HTMLElement).style.transform = 'translate(0, 0)';
+    });
+  });
+
+  // ============================================
+  // COUNT UP ANIMATION
+  // ============================================
+  function animateCounter(el: Element) {
+    const target = parseInt(el.getAttribute('data-target') || '0');
+    const duration = 2000;
+    const start = 0;
+    const startTime = performance.now();
+    
+    function update(currentTime: number) {
+      const elapsed = currentTime - startTime;
+      const progress = Math.min(elapsed / duration, 1);
+      
+      // Easing
+      const easeOutQuart = 1 - Math.pow(1 - progress, 4);
+      const current = Math.floor(start + (target - start) * easeOutQuart);
+      
+      el.textContent = current.toLocaleString();
+      
+      if (progress < 1) {
+        requestAnimationFrame(update);
+      }
+    }
+    
+    requestAnimationFrame(update);
+  }
+
+  // Trigger count-up when visible
+  const counterObserver = new IntersectionObserver((entries) => {
+    entries.forEach(entry => {
+      if (entry.isIntersecting) {
+        animateCounter(entry.target);
+        counterObserver.unobserve(entry.target);
+      }
+    });
+  }, { threshold: 0.5 });
+
+  document.querySelectorAll('.count-up').forEach(el => counterObserver.observe(el));
+
+  // ============================================
+  // PARALLAX ON SCROLL
+  // ============================================
+  window.addEventListener('scroll', () => {
+    const scrolled = window.pageYOffset;
+    
+    document.querySelectorAll('[data-parallax]').forEach(el => {
+      const speed = parseFloat((el as HTMLElement).dataset.parallax || '0.5');
+      (el as HTMLElement).style.transform = `translateY(${scrolled * speed}px)`;
+    });
+  });
+</script>

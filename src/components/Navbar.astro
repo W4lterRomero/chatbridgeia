@@ -1,0 +1,140 @@
+---
+/**
+ * Navbar Component
+ * Premium floating glassmorphism navigation
+ */
+import { SITE_CONFIG } from '@config/site';
+---
+
+<nav class="fixed top-0 left-0 right-0 z-50 px-4 lg:px-8 py-4">
+  <div class="max-w-6xl mx-auto">
+    <div class="navbar-glass flex items-center justify-between px-5 py-3 rounded-2xl backdrop-blur-xl bg-obsidian/70 border border-white/[0.08] shadow-2xl shadow-black/30">
+      
+      <!-- Logo / Brand -->
+      <a href="/" class="flex items-center gap-3 group">
+        <div class="relative">
+          <div class="w-10 h-10 bg-gradient-to-br from-sapphire to-violet-500 rounded-xl flex items-center justify-center shadow-lg shadow-sapphire/30 group-hover:shadow-sapphire/50 transition-shadow">
+            <span class="text-white text-sm font-bold tracking-tight">CB</span>
+          </div>
+          <!-- Glow effect -->
+          <div class="absolute -inset-1 bg-gradient-to-br from-sapphire to-violet-500 rounded-xl blur-md opacity-30 group-hover:opacity-50 transition-opacity"></div>
+        </div>
+        <div class="flex flex-col">
+          <span class="text-ivory font-semibold tracking-tight group-hover:text-sapphire-light transition-colors">
+            {SITE_CONFIG.name}
+          </span>
+          <span class="text-ivory/40 text-[10px] uppercase tracking-widest hidden sm:block">
+            Automatización
+          </span>
+        </div>
+      </a>
+      
+      <!-- Navigation Links (Desktop) -->
+      <div class="hidden md:flex items-center gap-1">
+        <a href="#servicios" class="nav-link px-4 py-2 text-sm text-ivory/60 hover:text-ivory hover:bg-white/5 rounded-lg transition-all">
+          Servicios
+        </a>
+        <a href="#proceso" class="nav-link px-4 py-2 text-sm text-ivory/60 hover:text-ivory hover:bg-white/5 rounded-lg transition-all">
+          Proceso
+        </a>
+        <a href="#garantia" class="nav-link px-4 py-2 text-sm text-ivory/60 hover:text-ivory hover:bg-white/5 rounded-lg transition-all">
+          Garantía
+        </a>
+      </div>
+      
+      <!-- CTA Button -->
+      <a 
+        href="#contacto"
+        class="group relative flex items-center gap-2 px-5 py-2.5 text-sm font-semibold text-white rounded-xl overflow-hidden transition-all duration-300"
+      >
+        <!-- Gradient background -->
+        <div class="absolute inset-0 bg-gradient-to-r from-sapphire to-violet-500 transition-opacity"></div>
+        <div class="absolute inset-0 bg-gradient-to-r from-violet-500 to-emerald-500 opacity-0 group-hover:opacity-100 transition-opacity duration-500"></div>
+        
+        <!-- Content -->
+        <span class="relative z-10">Solicita nuestros servicios</span>
+        <svg class="relative z-10 w-4 h-4 transition-transform group-hover:translate-x-0.5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z" />
+        </svg>
+        
+        <!-- Shine effect -->
+        <div class="absolute inset-0 -translate-x-full bg-gradient-to-r from-transparent via-white/25 to-transparent group-hover:translate-x-full transition-transform duration-700"></div>
+      </a>
+      
+      <!-- Mobile Menu Button -->
+      <button 
+        id="mobile-menu-btn"
+        class="md:hidden w-10 h-10 flex items-center justify-center text-ivory/70 hover:text-ivory transition-colors"
+        aria-label="Abrir menú"
+      >
+        <svg class="w-6 h-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16" />
+        </svg>
+      </button>
+    </div>
+    
+    <!-- Mobile Menu -->
+    <div id="mobile-menu" class="hidden md:hidden mt-2 p-4 rounded-2xl backdrop-blur-xl bg-obsidian/90 border border-white/[0.08]">
+      <div class="flex flex-col gap-2">
+        <a href="#servicios" class="px-4 py-3 text-ivory/70 hover:text-ivory hover:bg-white/5 rounded-lg transition-all">
+          Servicios
+        </a>
+        <a href="#proceso" class="px-4 py-3 text-ivory/70 hover:text-ivory hover:bg-white/5 rounded-lg transition-all">
+          Proceso
+        </a>
+        <a href="#garantia" class="px-4 py-3 text-ivory/70 hover:text-ivory hover:bg-white/5 rounded-lg transition-all">
+          Garantía
+        </a>
+        <a 
+          href="#contacto" 
+          class="mt-2 px-4 py-3 text-center font-semibold text-white bg-gradient-to-r from-sapphire to-violet-500 rounded-lg"
+        >
+          Solicita nuestros servicios
+        </a>
+      </div>
+    </div>
+  </div>
+</nav>
+
+<script>
+  const menuBtn = document.getElementById('mobile-menu-btn');
+  const mobileMenu = document.getElementById('mobile-menu');
+  
+  menuBtn?.addEventListener('click', () => {
+    mobileMenu?.classList.toggle('hidden');
+  });
+  
+  // Close menu when clicking a link
+  mobileMenu?.querySelectorAll('a').forEach(link => {
+    link.addEventListener('click', () => {
+      mobileMenu.classList.add('hidden');
+    });
+  });
+</script>
+
+<style>
+  .navbar-glass {
+    transition: all 0.3s ease;
+  }
+  
+  .nav-link {
+    position: relative;
+  }
+  
+  .nav-link::after {
+    content: '';
+    position: absolute;
+    bottom: 4px;
+    left: 50%;
+    width: 0;
+    height: 2px;
+    background: linear-gradient(to right, var(--sapphire), var(--sapphire-light));
+    border-radius: 1px;
+    transition: all 0.3s ease;
+    transform: translateX(-50%);
+  }
+  
+  .nav-link:hover::after {
+    width: 60%;
+  }
+</style>
