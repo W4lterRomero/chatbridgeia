@@ -1,140 +1,263 @@
 ---
 /**
  * Navbar Component
- * Premium floating glassmorphism navigation
+ * Ultra Premium Floating Navigation with scroll effects
  */
 import { SITE_CONFIG } from '@config/site';
 ---
 
-<nav class="fixed top-0 left-0 right-0 z-50 px-4 lg:px-8 py-4">
-  <div class="max-w-6xl mx-auto">
-    <div class="navbar-glass flex items-center justify-between px-5 py-3 rounded-2xl backdrop-blur-xl bg-obsidian/70 border border-white/[0.08] shadow-2xl shadow-black/30">
+<nav id="navbar" class="fixed top-0 left-0 right-0 z-50 px-4 lg:px-6 py-3 transition-all duration-500">
+  <div class="max-w-7xl mx-auto">
+    <div class="navbar-glass flex items-center justify-between px-4 lg:px-6 py-2.5 rounded-2xl backdrop-blur-xl bg-obsidian/60 border border-white/[0.06] shadow-2xl shadow-black/40">
       
       <!-- Logo / Brand -->
       <a href="/" class="flex items-center gap-3 group">
+        <!-- Logo Image -->
         <div class="relative">
-          <div class="w-10 h-10 bg-gradient-to-br from-sapphire to-violet-500 rounded-xl flex items-center justify-center shadow-lg shadow-sapphire/30 group-hover:shadow-sapphire/50 transition-shadow">
-            <span class="text-white text-sm font-bold tracking-tight">CB</span>
+          <div class="w-11 h-11 rounded-xl overflow-hidden shadow-lg shadow-sapphire/40 group-hover:shadow-sapphire/60 transition-all duration-300 group-hover:scale-105">
+            <img src="/images/logo.png" alt="ChatBridge IA" class="w-full h-full object-cover" />
           </div>
-          <!-- Glow effect -->
-          <div class="absolute -inset-1 bg-gradient-to-br from-sapphire to-violet-500 rounded-xl blur-md opacity-30 group-hover:opacity-50 transition-opacity"></div>
+          <!-- Pulsing glow -->
+          <div class="absolute -inset-1 bg-gradient-to-br from-sapphire to-violet-500 rounded-xl blur-lg opacity-40 group-hover:opacity-60 transition-opacity animate-pulse"></div>
         </div>
+        
         <div class="flex flex-col">
-          <span class="text-ivory font-semibold tracking-tight group-hover:text-sapphire-light transition-colors">
+          <span class="text-ivory font-bold text-lg tracking-tight group-hover:text-transparent group-hover:bg-clip-text group-hover:bg-gradient-to-r group-hover:from-sapphire-light group-hover:to-violet-400 transition-all duration-300">
             {SITE_CONFIG.name}
           </span>
-          <span class="text-ivory/40 text-[10px] uppercase tracking-widest hidden sm:block">
-            Automatización
+          <span class="text-ivory/30 text-[9px] uppercase tracking-[0.2em] hidden sm:block">
+            Automatización Inteligente
           </span>
         </div>
       </a>
       
       <!-- Navigation Links (Desktop) -->
-      <div class="hidden md:flex items-center gap-1">
-        <a href="#servicios" class="nav-link px-4 py-2 text-sm text-ivory/60 hover:text-ivory hover:bg-white/5 rounded-lg transition-all">
-          Servicios
-        </a>
-        <a href="#proceso" class="nav-link px-4 py-2 text-sm text-ivory/60 hover:text-ivory hover:bg-white/5 rounded-lg transition-all">
-          Proceso
-        </a>
-        <a href="#garantia" class="nav-link px-4 py-2 text-sm text-ivory/60 hover:text-ivory hover:bg-white/5 rounded-lg transition-all">
-          Garantía
-        </a>
+      <div class="hidden lg:flex items-center">
+        <!-- Nav pills container -->
+        <div class="flex items-center gap-1 p-1 bg-white/[0.03] rounded-xl border border-white/[0.04]">
+          <a href="#servicios" class="nav-link group px-4 py-2 text-sm text-ivory/50 hover:text-ivory rounded-lg transition-all duration-300 relative">
+            <span class="relative z-10">Servicios</span>
+            <div class="absolute inset-0 bg-gradient-to-r from-sapphire/20 to-violet-500/20 rounded-lg opacity-0 group-hover:opacity-100 transition-opacity"></div>
+          </a>
+          <a href="#proceso" class="nav-link group px-4 py-2 text-sm text-ivory/50 hover:text-ivory rounded-lg transition-all duration-300 relative">
+            <span class="relative z-10">Proceso</span>
+            <div class="absolute inset-0 bg-gradient-to-r from-sapphire/20 to-violet-500/20 rounded-lg opacity-0 group-hover:opacity-100 transition-opacity"></div>
+          </a>
+          <a href="#beneficios" class="nav-link group px-4 py-2 text-sm text-ivory/50 hover:text-ivory rounded-lg transition-all duration-300 relative">
+            <span class="relative z-10">Beneficios</span>
+            <div class="absolute inset-0 bg-gradient-to-r from-sapphire/20 to-violet-500/20 rounded-lg opacity-0 group-hover:opacity-100 transition-opacity"></div>
+          </a>
+          <a href="#garantia" class="nav-link group px-4 py-2 text-sm text-ivory/50 hover:text-ivory rounded-lg transition-all duration-300 relative">
+            <span class="relative z-10">Garantía</span>
+            <div class="absolute inset-0 bg-gradient-to-r from-sapphire/20 to-violet-500/20 rounded-lg opacity-0 group-hover:opacity-100 transition-opacity"></div>
+          </a>
+        </div>
       </div>
       
       <!-- CTA Button -->
-      <a 
-        href="#contacto"
-        class="group relative flex items-center gap-2 px-5 py-2.5 text-sm font-semibold text-white rounded-xl overflow-hidden transition-all duration-300"
-      >
-        <!-- Gradient background -->
-        <div class="absolute inset-0 bg-gradient-to-r from-sapphire to-violet-500 transition-opacity"></div>
-        <div class="absolute inset-0 bg-gradient-to-r from-violet-500 to-emerald-500 opacity-0 group-hover:opacity-100 transition-opacity duration-500"></div>
+      <div class="flex items-center gap-3">
+        <!-- Status indicator (desktop only) -->
+        <div class="hidden lg:flex items-center gap-2 px-3 py-1.5 bg-emerald-500/10 border border-emerald-500/20 rounded-full">
+          <span class="relative flex h-2 w-2">
+            <span class="animate-ping absolute inline-flex h-full w-full rounded-full bg-emerald-400 opacity-75"></span>
+            <span class="relative inline-flex rounded-full h-2 w-2 bg-emerald-400"></span>
+          </span>
+          <span class="text-emerald-400 text-xs font-medium">Disponible</span>
+        </div>
         
-        <!-- Content -->
-        <span class="relative z-10">Solicita nuestros servicios</span>
-        <svg class="relative z-10 w-4 h-4 transition-transform group-hover:translate-x-0.5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z" />
-        </svg>
+        <!-- Main CTA -->
+        <a 
+          href="#contacto"
+          class="group relative flex items-center gap-2 px-5 py-2.5 text-sm font-semibold text-white rounded-xl overflow-hidden transition-all duration-300 hover:scale-105 hover:shadow-lg hover:shadow-sapphire/30"
+        >
+          <!-- Gradient background -->
+          <div class="absolute inset-0 bg-gradient-to-r from-sapphire to-violet-500"></div>
+          <div class="absolute inset-0 bg-gradient-to-r from-violet-500 to-emerald-500 opacity-0 group-hover:opacity-100 transition-opacity duration-500"></div>
+          
+          <!-- Content -->
+          <span class="relative z-10 hidden sm:inline">Solicita nuestros servicios</span>
+          <span class="relative z-10 sm:hidden">Demo</span>
+          <svg class="relative z-10 w-4 h-4 transition-transform group-hover:translate-x-0.5 group-hover:scale-110" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 7l5 5m0 0l-5 5m5-5H6" />
+          </svg>
+          
+          <!-- Shine effect -->
+          <div class="absolute inset-0 -translate-x-full bg-gradient-to-r from-transparent via-white/30 to-transparent group-hover:translate-x-full transition-transform duration-700"></div>
+        </a>
         
-        <!-- Shine effect -->
-        <div class="absolute inset-0 -translate-x-full bg-gradient-to-r from-transparent via-white/25 to-transparent group-hover:translate-x-full transition-transform duration-700"></div>
-      </a>
-      
-      <!-- Mobile Menu Button -->
-      <button 
-        id="mobile-menu-btn"
-        class="md:hidden w-10 h-10 flex items-center justify-center text-ivory/70 hover:text-ivory transition-colors"
-        aria-label="Abrir menú"
-      >
-        <svg class="w-6 h-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16" />
-        </svg>
-      </button>
+        <!-- Mobile Menu Button -->
+        <button 
+          id="mobile-menu-btn"
+          class="lg:hidden w-10 h-10 flex items-center justify-center text-ivory/60 hover:text-ivory hover:bg-white/5 rounded-xl transition-all"
+          aria-label="Abrir menú"
+        >
+          <svg id="menu-icon" class="w-5 h-5 transition-transform duration-300" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16" />
+          </svg>
+          <svg id="close-icon" class="w-5 h-5 hidden transition-transform duration-300" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" />
+          </svg>
+        </button>
+      </div>
     </div>
     
     <!-- Mobile Menu -->
-    <div id="mobile-menu" class="hidden md:hidden mt-2 p-4 rounded-2xl backdrop-blur-xl bg-obsidian/90 border border-white/[0.08]">
-      <div class="flex flex-col gap-2">
-        <a href="#servicios" class="px-4 py-3 text-ivory/70 hover:text-ivory hover:bg-white/5 rounded-lg transition-all">
-          Servicios
+    <div id="mobile-menu" class="mobile-menu hidden lg:hidden mt-2 p-4 rounded-2xl backdrop-blur-xl bg-obsidian/95 border border-white/[0.08] shadow-2xl">
+      <div class="flex flex-col gap-1">
+        <a href="#servicios" class="mobile-link flex items-center gap-3 px-4 py-3.5 text-ivory/70 hover:text-ivory hover:bg-white/5 rounded-xl transition-all group">
+          <div class="w-8 h-8 rounded-lg bg-sapphire/10 flex items-center justify-center group-hover:bg-sapphire/20 transition-colors">
+            <svg class="w-4 h-4 text-sapphire-light" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z" />
+            </svg>
+          </div>
+          <span>Servicios</span>
         </a>
-        <a href="#proceso" class="px-4 py-3 text-ivory/70 hover:text-ivory hover:bg-white/5 rounded-lg transition-all">
-          Proceso
+        <a href="#proceso" class="mobile-link flex items-center gap-3 px-4 py-3.5 text-ivory/70 hover:text-ivory hover:bg-white/5 rounded-xl transition-all group">
+          <div class="w-8 h-8 rounded-lg bg-violet-500/10 flex items-center justify-center group-hover:bg-violet-500/20 transition-colors">
+            <svg class="w-4 h-4 text-violet-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5H7a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2" />
+            </svg>
+          </div>
+          <span>Proceso</span>
         </a>
-        <a href="#garantia" class="px-4 py-3 text-ivory/70 hover:text-ivory hover:bg-white/5 rounded-lg transition-all">
-          Garantía
+        <a href="#beneficios" class="mobile-link flex items-center gap-3 px-4 py-3.5 text-ivory/70 hover:text-ivory hover:bg-white/5 rounded-xl transition-all group">
+          <div class="w-8 h-8 rounded-lg bg-emerald-500/10 flex items-center justify-center group-hover:bg-emerald-500/20 transition-colors">
+            <svg class="w-4 h-4 text-emerald-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
+            </svg>
+          </div>
+          <span>Beneficios</span>
         </a>
+        <a href="#garantia" class="mobile-link flex items-center gap-3 px-4 py-3.5 text-ivory/70 hover:text-ivory hover:bg-white/5 rounded-xl transition-all group">
+          <div class="w-8 h-8 rounded-lg bg-amber-500/10 flex items-center justify-center group-hover:bg-amber-500/20 transition-colors">
+            <svg class="w-4 h-4 text-amber-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z" />
+            </svg>
+          </div>
+          <span>Garantía</span>
+        </a>
+        
+        <!-- Separator -->
+        <div class="my-2 border-t border-white/5"></div>
+        
+        <!-- Mobile CTA -->
         <a 
           href="#contacto" 
-          class="mt-2 px-4 py-3 text-center font-semibold text-white bg-gradient-to-r from-sapphire to-violet-500 rounded-lg"
+          class="flex items-center justify-center gap-2 px-4 py-4 text-center font-semibold text-white bg-gradient-to-r from-sapphire to-violet-500 rounded-xl hover:shadow-lg hover:shadow-sapphire/30 transition-all"
         >
-          Solicita nuestros servicios
+          <span>Solicita nuestros servicios</span>
+          <svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 7l5 5m0 0l-5 5m5-5H6" />
+          </svg>
         </a>
+        
+        <!-- Status -->
+        <div class="flex items-center justify-center gap-2 mt-2 text-ivory/40 text-xs">
+          <span class="relative flex h-2 w-2">
+            <span class="animate-ping absolute inline-flex h-full w-full rounded-full bg-emerald-400 opacity-75"></span>
+            <span class="relative inline-flex rounded-full h-2 w-2 bg-emerald-400"></span>
+          </span>
+          <span>Respondemos en menos de 2 horas</span>
+        </div>
       </div>
     </div>
   </div>
 </nav>
 
 <script>
+  const navbar = document.getElementById('navbar');
   const menuBtn = document.getElementById('mobile-menu-btn');
   const mobileMenu = document.getElementById('mobile-menu');
+  const menuIcon = document.getElementById('menu-icon');
+  const closeIcon = document.getElementById('close-icon');
   
+  // Toggle mobile menu
   menuBtn?.addEventListener('click', () => {
     mobileMenu?.classList.toggle('hidden');
+    menuIcon?.classList.toggle('hidden');
+    closeIcon?.classList.toggle('hidden');
   });
   
   // Close menu when clicking a link
   mobileMenu?.querySelectorAll('a').forEach(link => {
     link.addEventListener('click', () => {
       mobileMenu.classList.add('hidden');
+      menuIcon?.classList.remove('hidden');
+      closeIcon?.classList.add('hidden');
     });
+  });
+  
+  // Navbar scroll effect
+  let lastScroll = 0;
+  window.addEventListener('scroll', () => {
+    const currentScroll = window.scrollY;
+    
+    if (navbar) {
+      if (currentScroll > 50) {
+        navbar.classList.add('scrolled');
+      } else {
+        navbar.classList.remove('scrolled');
+      }
+      
+      // Hide on scroll down, show on scroll up
+      if (currentScroll > lastScroll && currentScroll > 100) {
+        navbar.style.transform = 'translateY(-100%)';
+      } else {
+        navbar.style.transform = 'translateY(0)';
+      }
+    }
+    
+    lastScroll = currentScroll;
   });
 </script>
 
 <style>
+  #navbar {
+    transition: transform 0.3s ease, padding 0.3s ease;
+  }
+  
+  #navbar.scrolled {
+    padding-top: 0.5rem;
+    padding-bottom: 0.5rem;
+  }
+  
+  #navbar.scrolled .navbar-glass {
+    background-color: rgba(10, 10, 15, 0.85);
+    border-color: rgba(255, 255, 255, 0.1);
+  }
+  
   .navbar-glass {
     transition: all 0.3s ease;
   }
   
-  .nav-link {
-    position: relative;
+  .mobile-menu {
+    animation: slideDown 0.3s ease;
   }
   
-  .nav-link::after {
-    content: '';
-    position: absolute;
-    bottom: 4px;
-    left: 50%;
-    width: 0;
-    height: 2px;
-    background: linear-gradient(to right, var(--sapphire), var(--sapphire-light));
-    border-radius: 1px;
-    transition: all 0.3s ease;
-    transform: translateX(-50%);
+  @keyframes slideDown {
+    from {
+      opacity: 0;
+      transform: translateY(-10px);
+    }
+    to {
+      opacity: 1;
+      transform: translateY(0);
+    }
   }
   
-  .nav-link:hover::after {
-    width: 60%;
+  .mobile-link {
+    animation: fadeIn 0.3s ease forwards;
+    opacity: 0;
+  }
+  
+  .mobile-link:nth-child(1) { animation-delay: 0.05s; }
+  .mobile-link:nth-child(2) { animation-delay: 0.1s; }
+  .mobile-link:nth-child(3) { animation-delay: 0.15s; }
+  .mobile-link:nth-child(4) { animation-delay: 0.2s; }
+  
+  @keyframes fadeIn {
+    to {
+      opacity: 1;
+    }
   }
 </style>
