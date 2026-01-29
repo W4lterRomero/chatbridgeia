@@ -71,9 +71,9 @@ function isValidString(str: string, minLength = 1, maxLength = 500): boolean {
 
 /**
  * n8n Webhook URL - Configure via environment variable
- * Set N8N_WEBHOOK_URL in your .env file
+ * Set N8N_WEBHOOK_URL in your .env file (Runtime)
  */
-const N8N_WEBHOOK_URL = import.meta.env.N8N_WEBHOOK_URL || '';
+const N8N_WEBHOOK_URL = process.env.N8N_WEBHOOK_URL || '';
 
 /**
  * Send lead data to n8n webhook
