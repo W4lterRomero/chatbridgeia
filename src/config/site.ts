@@ -16,7 +16,7 @@ export const SITE_CONFIG = {
     socialProof: '+150 negocios ya dejaron de perder ventas',
 
     // Guarantee
-    guarantee: '7 días o gratis',
+    guarantee: '7 días de prueba',
     guaranteeText: 'Si en 7 días no ves resultados, te devolvemos cada centavo. Sin preguntas.',
 
     // Contact

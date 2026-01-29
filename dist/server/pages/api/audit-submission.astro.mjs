@@ -6,12 +6,51 @@ function sanitizeString(input) {
   sanitized = sanitized.replace(/<[^>]*>/g, "").replace(/javascript:/gi, "").replace(/on\w+=/gi, "");
   return sanitized;
 }
-function isValidWhatsApp(phone) {
+function isValidEmail(email) {
+  const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+  return emailRegex.test(email);
+}
+function isValidPhone(phone) {
   const phoneRegex = /^[\+]?[(]?[0-9]{1,4}[)]?[-\s\.]?[0-9]{1,4}[-\s\.]?[0-9]{1,9}$/;
   return phoneRegex.test(phone.replace(/\s/g, ""));
 }
 function isValidString(str, minLength = 1, maxLength = 500) {
   return str.length >= minLength && str.length <= maxLength;
+}
+const N8N_WEBHOOK_URL = "https://n8n.chatbridgeia.com/webhook/new_register";
+async function sendToN8N(leadData) {
+  try {
+    const controller = new AbortController();
+    const timeoutId = setTimeout(() => controller.abort(), 1e4);
+    const response = await fetch(N8N_WEBHOOK_URL, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json"
+      },
+      body: JSON.stringify({
+        ...leadData,
+        timestamp: (/* @__PURE__ */ new Date()).toISOString(),
+        source: "chatbridge-website",
+        webhook_version: "1.0"
+      }),
+      signal: controller.signal
+    });
+    clearTimeout(timeoutId);
+    if (response.ok) {
+      console.log("[N8N] Lead sent successfully to webhook");
+      return true;
+    } else {
+      console.error("[N8N] Webhook returned error:", response.status);
+      return false;
+    }
+  } catch (error) {
+    if (error instanceof Error && error.name === "AbortError") {
+      console.error("[N8N] Webhook timeout after 10s");
+    } else {
+      console.error("[N8N] Failed to send to webhook:", error);
+    }
+    return false;
+  }
 }
 const POST = async ({ request }) => {
   try {
@@ -38,11 +77,17 @@ const POST = async ({ request }) => {
     } else if (!isValidString(name, 2, 100)) {
       errors.push({ field: "name", message: "El nombre debe tener entre 2 y 100 caracteres" });
     }
-    const whatsapp = sanitizeString(body.whatsapp);
-    if (!whatsapp) {
-      errors.push({ field: "whatsapp", message: "El WhatsApp es requerido" });
-    } else if (!isValidWhatsApp(whatsapp)) {
-      errors.push({ field: "whatsapp", message: "Formato de WhatsApp inválido" });
+    const email = sanitizeString(body.email);
+    if (!email) {
+      errors.push({ field: "email", message: "El correo electrónico es requerido" });
+    } else if (!isValidEmail(email)) {
+      errors.push({ field: "email", message: "Formato de correo electrónico inválido" });
+    }
+    const phone = sanitizeString(body.phone);
+    if (!phone) {
+      errors.push({ field: "phone", message: "El número de teléfono es requerido" });
+    } else if (!isValidPhone(phone)) {
+      errors.push({ field: "phone", message: "Formato de teléfono inválido" });
     }
     const painPoint = sanitizeString(body.painPoint);
     if (!painPoint) {
@@ -50,7 +95,12 @@ const POST = async ({ request }) => {
     } else if (!isValidString(painPoint, 1, 200)) {
       errors.push({ field: "painPoint", message: "Problema inválido" });
     }
-    const business = sanitizeString(body.business) || "";
+    const otherDescription = sanitizeString(body.otherDescription) || "";
+    if (painPoint === "otro" && !otherDescription) {
+      errors.push({ field: "otherDescription", message: "Por favor describe tu problema" });
+    } else if (otherDescription && !isValidString(otherDescription, 5, 1e3)) {
+      errors.push({ field: "otherDescription", message: "La descripción debe tener entre 5 y 1000 caracteres" });
+    }
     if (errors.length > 0) {
       return new Response(
         JSON.stringify({
@@ -68,22 +118,26 @@ const POST = async ({ request }) => {
     console.log("[AUDIT-SUBMISSION] New lead received:", {
       timestamp: (/* @__PURE__ */ new Date()).toISOString(),
       name,
-      whatsapp: whatsapp?.slice(0, 4) + "****" + whatsapp?.slice(-2),
+      email: email?.split("@")[0] + "@***",
+      // Masked for logs
+      phone: phone?.slice(0, 4) + "****" + phone?.slice(-2),
       // Masked for logs
       painPoint,
-      business: business || "N/A",
+      hasOtherDescription: !!otherDescription,
       ip: request.headers.get("x-forwarded-for") || "unknown",
       userAgent: request.headers.get("user-agent")?.slice(0, 50) || "unknown"
     });
     const leadData = {
       id: `lead_${Date.now()}`,
       name,
-      whatsapp,
+      email,
+      phone,
       painPoint,
-      business,
+      otherDescription: otherDescription || null,
       createdAt: (/* @__PURE__ */ new Date()).toISOString(),
       source: "audit-terminal"
     };
+    const webhookSent = await sendToN8N(leadData);
     return new Response(
       JSON.stringify({
         success: true,

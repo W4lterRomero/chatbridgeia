@@ -12,9 +12,10 @@ import { useState, type FormEvent } from 'react';
 
 interface FormData {
     name: string;
-    whatsapp: string;
+    email: string;
+    phone: string;
     painPoint: string;
-    business: string;
+    otherDescription: string;
 }
 
 interface ValidationError {
@@ -35,9 +36,10 @@ type FormStatus = 'idle' | 'loading' | 'success' | 'error';
 export default function AuditTerminal() {
     const [formData, setFormData] = useState<FormData>({
         name: '',
-        whatsapp: '',
+        email: '',
+        phone: '',
         painPoint: '',
-        business: ''
+        otherDescription: ''
     });
 
     const [status, setStatus] = useState<FormStatus>('idle');
@@ -54,7 +56,7 @@ export default function AuditTerminal() {
         { value: 'otro', label: 'Otro problema' }
     ];
 
-    const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>) => {
+    const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement | HTMLTextAreaElement>) => {
         const { name, value } = e.target;
         setFormData(prev => ({ ...prev, [name]: value }));
 
@@ -105,9 +107,10 @@ export default function AuditTerminal() {
             // Reset form after success
             setFormData({
                 name: '',
-                whatsapp: '',
+                email: '',
+                phone: '',
                 painPoint: '',
-                business: ''
+                otherDescription: ''
             });
 
         } catch (error) {
@@ -125,6 +128,9 @@ export default function AuditTerminal() {
 
         return `${base} ${errorFields.has(fieldName) ? error : normal}`;
     };
+
+    // Check if "otro" is selected
+    const showOtherField = formData.painPoint === 'otro';
 
     // Success state
     if (status === 'success') {
@@ -158,13 +164,13 @@ export default function AuditTerminal() {
                     <span className="w-3 h-3 rounded-full bg-yellow-500/80"></span>
                     <span className="w-3 h-3 rounded-full bg-emerald-500/80"></span>
                 </div>
-                <span className="ml-4 text-white/40 text-sm font-mono">audit-terminal v1.0</span>
+                <span className="ml-4 text-white/40 text-sm font-mono">contact-form v1.0</span>
             </div>
 
             {/* Terminal content */}
             <div className="mb-6">
                 <h3 className="text-xl font-bold text-white mb-2">
-                    <span className="text-blue-400">$</span> Agenda tu auditoría gratis
+                    <span className="text-blue-400">$</span> Agenda tu llamada gratis
                 </h3>
                 <p className="text-white/50 text-sm">
                     15 minutos para diagnosticar tu negocio
@@ -195,28 +201,28 @@ export default function AuditTerminal() {
                     />
                 </div>
 
-                {/* WhatsApp */}
+                {/* Email */}
                 <div>
                     <input
-                        type="tel"
-                        name="whatsapp"
-                        value={formData.whatsapp}
+                        type="email"
+                        name="email"
+                        value={formData.email}
                         onChange={handleChange}
-                        placeholder="Tu WhatsApp (ej: +503 7000-0000)"
-                        className={getInputClass('whatsapp')}
+                        placeholder="Tu correo electrónico"
+                        className={getInputClass('email')}
                         disabled={status === 'loading'}
                     />
                 </div>
 
-                {/* Business (optional) */}
+                {/* Phone */}
                 <div>
                     <input
-                        type="text"
-                        name="business"
-                        value={formData.business}
+                        type="tel"
+                        name="phone"
+                        value={formData.phone}
                         onChange={handleChange}
-                        placeholder="Nombre de tu negocio (opcional)"
-                        className={getInputClass('business')}
+                        placeholder="Tu número de teléfono (ej: +503 7000-0000)"
+                        className={getInputClass('phone')}
                         disabled={status === 'loading'}
                     />
                 </div>
@@ -238,6 +244,21 @@ export default function AuditTerminal() {
                     </select>
                 </div>
 
+                {/* Other Description - Only shows when "otro" is selected */}
+                {showOtherField && (
+                    <div className="animate-fadeIn">
+                        <textarea
+                            name="otherDescription"
+                            value={formData.otherDescription}
+                            onChange={handleChange}
+                            placeholder="Describe tu problema..."
+                            rows={3}
+                            className={`${getInputClass('otherDescription')} resize-none`}
+                            disabled={status === 'loading'}
+                        />
+                    </div>
+                )}
+
                 {/* Submit */}
                 <button
                     type="submit"
@@ -258,7 +279,7 @@ export default function AuditTerminal() {
                             </>
                         ) : (
                             <>
-                                <span>Solicitar Auditoría Gratis</span>
+                                <span>Solicita nuestros servicios</span>
                                 <svg className="w-5 h-5 transition-transform group-hover:translate-x-1" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                                     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 7l5 5m0 0l-5 5m5-5H6" />
                                 </svg>
@@ -283,6 +304,16 @@ export default function AuditTerminal() {
                     </span>
                 </div>
             </form>
+
+            <style>{`
+        @keyframes fadeIn {
+          from { opacity: 0; transform: translateY(-10px); }
+          to { opacity: 1; transform: translateY(0); }
+        }
+        .animate-fadeIn {
+          animation: fadeIn 0.3s ease forwards;
+        }
+      `}</style>
         </div>
     );
 }

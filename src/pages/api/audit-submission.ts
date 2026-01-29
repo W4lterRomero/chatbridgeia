@@ -15,9 +15,10 @@ import type { APIRoute } from 'astro';
 // Type definitions for request body
 interface AuditSubmissionBody {
     name: string;
-    whatsapp: string;
+    email: string;
+    phone: string;
     painPoint: string;
-    business?: string;
+    otherDescription?: string;
 }
 
 // Validation error response type
@@ -45,9 +46,17 @@ function sanitizeString(input: unknown): string | null {
 }
 
 /**
+ * Validate email format
+ */
+function isValidEmail(email: string): boolean {
+    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    return emailRegex.test(email);
+}
+
+/**
  * Validate phone number format (basic validation)
  */
-function isValidWhatsApp(phone: string): boolean {
+function isValidPhone(phone: string): boolean {
     // Allow formats: +503 7000-0000, +1234567890, 70000000
     const phoneRegex = /^[\+]?[(]?[0-9]{1,4}[)]?[-\s\.]?[0-9]{1,4}[-\s\.]?[0-9]{1,9}$/;
     return phoneRegex.test(phone.replace(/\s/g, ''));
@@ -58,6 +67,59 @@ function isValidWhatsApp(phone: string): boolean {
  */
 function isValidString(str: string, minLength = 1, maxLength = 500): boolean {
     return str.length >= minLength && str.length <= maxLength;
+}
+
+/**
+ * n8n Webhook URL - Configure via environment variable
+ * Set N8N_WEBHOOK_URL in your .env file
+ */
+const N8N_WEBHOOK_URL = import.meta.env.N8N_WEBHOOK_URL || '';
+
+/**
+ * Send lead data to n8n webhook
+ * @returns true if successful, false if failed (non-blocking)
+ */
+async function sendToN8N(leadData: Record<string, unknown>): Promise<boolean> {
+    if (!N8N_WEBHOOK_URL) {
+        console.log('[N8N] Webhook URL not configured, skipping...');
+        return false;
+    }
+
+    try {
+        const controller = new AbortController();
+        const timeoutId = setTimeout(() => controller.abort(), 10000); // 10s timeout
+
+        const response = await fetch(N8N_WEBHOOK_URL, {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({
+                ...leadData,
+                timestamp: new Date().toISOString(),
+                source: 'chatbridge-website',
+                webhook_version: '1.0'
+            }),
+            signal: controller.signal
+        });
+
+        clearTimeout(timeoutId);
+
+        if (response.ok) {
+            console.log('[N8N] Lead sent successfully to webhook');
+            return true;
+        } else {
+            console.error('[N8N] Webhook returned error:', response.status);
+            return false;
+        }
+    } catch (error) {
+        if (error instanceof Error && error.name === 'AbortError') {
+            console.error('[N8N] Webhook timeout after 10s');
+        } else {
+            console.error('[N8N] Failed to send to webhook:', error);
+        }
+        return false;
+    }
 }
 
 export const POST: APIRoute = async ({ request }) => {
@@ -96,12 +158,20 @@ export const POST: APIRoute = async ({ request }) => {
             errors.push({ field: 'name', message: 'El nombre debe tener entre 2 y 100 caracteres' });
         }
 
-        // Validate 'whatsapp' field
-        const whatsapp = sanitizeString(body.whatsapp);
-        if (!whatsapp) {
-            errors.push({ field: 'whatsapp', message: 'El WhatsApp es requerido' });
-        } else if (!isValidWhatsApp(whatsapp)) {
-            errors.push({ field: 'whatsapp', message: 'Formato de WhatsApp inválido' });
+        // Validate 'email' field
+        const email = sanitizeString(body.email);
+        if (!email) {
+            errors.push({ field: 'email', message: 'El correo electrónico es requerido' });
+        } else if (!isValidEmail(email)) {
+            errors.push({ field: 'email', message: 'Formato de correo electrónico inválido' });
+        }
+
+        // Validate 'phone' field
+        const phone = sanitizeString(body.phone);
+        if (!phone) {
+            errors.push({ field: 'phone', message: 'El número de teléfono es requerido' });
+        } else if (!isValidPhone(phone)) {
+            errors.push({ field: 'phone', message: 'Formato de teléfono inválido' });
         }
 
         // Validate 'painPoint' field
@@ -112,8 +182,13 @@ export const POST: APIRoute = async ({ request }) => {
             errors.push({ field: 'painPoint', message: 'Problema inválido' });
         }
 
-        // Optional: business name
-        const business = sanitizeString(body.business) || '';
+        // Validate 'otherDescription' if painPoint is 'otro'
+        const otherDescription = sanitizeString(body.otherDescription) || '';
+        if (painPoint === 'otro' && !otherDescription) {
+            errors.push({ field: 'otherDescription', message: 'Por favor describe tu problema' });
+        } else if (otherDescription && !isValidString(otherDescription, 5, 1000)) {
+            errors.push({ field: 'otherDescription', message: 'La descripción debe tener entre 5 y 1000 caracteres' });
+        }
 
         // Return validation errors if any
         if (errors.length > 0) {
@@ -141,30 +216,35 @@ export const POST: APIRoute = async ({ request }) => {
         console.log('[AUDIT-SUBMISSION] New lead received:', {
             timestamp: new Date().toISOString(),
             name,
-            whatsapp: whatsapp?.slice(0, 4) + '****' + whatsapp?.slice(-2), // Masked for logs
+            email: email?.split('@')[0] + '@***', // Masked for logs
+            phone: phone?.slice(0, 4) + '****' + phone?.slice(-2), // Masked for logs
             painPoint,
-            business: business || 'N/A',
+            hasOtherDescription: !!otherDescription,
             ip: request.headers.get('x-forwarded-for') || 'unknown',
             userAgent: request.headers.get('user-agent')?.slice(0, 50) || 'unknown'
         });
 
         // ========================================
-        // STEP 3: Store lead data
+        // STEP 3: Store lead data & Send to n8n
         // ========================================
 
-        // TODO: En producción, guardar en base de datos
-        // Ejemplo: await db.leads.create({ name, whatsapp, painPoint, business });
-
-        // For now, we'll just simulate success
+        // Prepare lead data
         const leadData = {
             id: `lead_${Date.now()}`,
             name,
-            whatsapp,
+            email,
+            phone,
             painPoint,
-            business,
+            otherDescription: otherDescription || null,
             createdAt: new Date().toISOString(),
             source: 'audit-terminal'
         };
+
+        // Send to n8n webhook (non-blocking, won't fail the request if webhook fails)
+        const webhookSent = await sendToN8N(leadData);
+
+        // TODO: En producción, también guardar en base de datos
+        // Ejemplo: await db.leads.create(leadData);
 
         // ========================================
         // STEP 4: Return success response
