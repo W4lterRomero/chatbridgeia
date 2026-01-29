@@ -31,14 +31,11 @@ RUN addgroup -g 1001 -S nodejs && adduser -S nodejs -u 1001
 # Copy package files
 COPY --from=build /app/package*.json ./
 
-# Install production dependencies only
-RUN npm ci --only=production
+# Copy node_modules from build stage (SSR needs all dependencies)
+COPY --from=build /app/node_modules ./node_modules
 
 # Copy built application from build stage
 COPY --from=build /app/dist ./dist
-
-# Copy environment variables
-COPY --from=build /app/.env* ./
 
 # Set ownership to non-root user
 RUN chown -R nodejs:nodejs /app
