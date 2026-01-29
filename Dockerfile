@@ -1,6 +1,6 @@
 # ============================================
-# ChatBridge IA - Production Dockerfile
-# Multi-Stage Build: Node.js → Nginx Alpine
+# ChatBridge IA - Production Dockerfile (SSR)
+# Multi-Stage Build: Build → Node.js Runtime
 # ============================================
 
 # Stage 1: Build
@@ -12,35 +12,51 @@ WORKDIR /app
 COPY package*.json ./
 
 # Install dependencies
-RUN npm ci --only=production=false
+RUN npm ci
 
 # Copy source code
 COPY . .
 
-# Build the static site
+# Build the SSR application
 RUN npm run build
 
-# Stage 2: Production (Nginx Alpine)
-FROM nginx:alpine AS production
+# Stage 2: Production (Node.js Runtime)
+FROM node:lts-alpine AS production
 
-# Remove default nginx config
-RUN rm -rf /etc/nginx/conf.d/default.conf
+WORKDIR /app
 
-# Copy custom nginx configuration
-COPY nginx.conf /etc/nginx/nginx.conf
+# Create non-root user for security
+RUN addgroup -g 1001 -S nodejs && adduser -S nodejs -u 1001
 
-# Copy built static files from build stage
-COPY --from=build /app/dist /usr/share/nginx/html
+# Copy package files
+COPY --from=build /app/package*.json ./
 
-# Create non-root user for security (preparation for Round 4)
-# RUN addgroup -g 1001 -S nginx && adduser -S nginx -u 1001
+# Install production dependencies only
+RUN npm ci --only=production
 
-# Expose port 80
-EXPOSE 80
+# Copy built application from build stage
+COPY --from=build /app/dist ./dist
+
+# Copy environment variables
+COPY --from=build /app/.env* ./
+
+# Set ownership to non-root user
+RUN chown -R nodejs:nodejs /app
+
+# Switch to non-root user
+USER nodejs
+
+# Expose port 4321
+EXPOSE 4321
+
+# Environment variables
+ENV HOST=0.0.0.0
+ENV PORT=4321
+ENV NODE_ENV=production
 
 # Health check
 HEALTHCHECK --interval=30s --timeout=3s --start-period=5s --retries=3 \
-  CMD wget --no-verbose --tries=1 --spider http://localhost:80/ || exit 1
+  CMD wget --no-verbose --tries=1 --spider http://localhost:4321/ || exit 1
 
-# Start Nginx
-CMD ["nginx", "-g", "daemon off;"]
+# Start the SSR server
+CMD ["node", "dist/server/entry.mjs"]

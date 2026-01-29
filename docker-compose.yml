@@ -1,7 +1,8 @@
-# ChatBridge IA - Development Docker Compose
-# Hot-reload enabled for local development
+# ChatBridge IA - Docker Compose
+# SSR Production Configuration
 
 services:
+  # Development server with hot-reload
   dev:
     image: node:lts-alpine
     container_name: chatbridge-dev
@@ -9,9 +10,7 @@ services:
     ports:
       - "3000:4321"
     volumes:
-      # Sync source code for hot-reload
       - ./:/app
-      # Anonymous volume for node_modules (performance)
       - /app/node_modules
     command: sh -c "npm install && npm run dev"
     environment:
@@ -19,14 +18,37 @@ services:
     stdin_open: true
     tty: true
 
-  # Production preview (optional)
-  prod:
+  # Production SSR server
+  app:
     build:
       context: .
       dockerfile: Dockerfile
-    container_name: chatbridge-prod
+    container_name: chatbridge-app
     ports:
-      - "8080:80"
+      - "4321:4321"
+    environment:
+      - NODE_ENV=production
+      - HOST=0.0.0.0
+      - PORT=4321
+      - N8N_WEBHOOK_URL=https://n8n.chatbridgeia.com/webhook/new_register
+    restart: unless-stopped
+    healthcheck:
+      test: [ "CMD", "wget", "--no-verbose", "--tries=1", "--spider", "http://localhost:4321/" ]
+      interval: 30s
+      timeout: 3s
+      retries: 3
+
+  # Production with nginx reverse proxy (optional)
+  nginx:
+    image: nginx:alpine
+    container_name: chatbridge-nginx
+    ports:
+      - "80:80"
+      - "443:443"
+    volumes:
+      - ./nginx-proxy.conf:/etc/nginx/nginx.conf:ro
+    depends_on:
+      - app
     profiles:
-      - production
+      - with-nginx
     restart: unless-stopped
