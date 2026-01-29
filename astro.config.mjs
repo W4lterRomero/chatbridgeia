@@ -14,7 +14,7 @@ export default defineConfig({
         mode: 'standalone'
     }),
     server: {
-        host: true,
+        host: '0.0.0.0',
         port: 4321
     },
     build: {
