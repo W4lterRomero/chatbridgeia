@@ -12,6 +12,9 @@ WORKDIR /app
 COPY package*.json ./
 
 # Install dependencies
+# Add libc6-compat for sharp compatibility in Alpine
+RUN apk add --no-cache libc6-compat python3 make g++
+
 RUN npm ci
 
 # Copy source code
